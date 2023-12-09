@@ -70,11 +70,22 @@ mvnw package
 Then, build the image with:
 
 ```shell script
-docker build -f src/main/docker/Dockerfile.jvm -t quarkus/firestore-quickstart-jvm .
+docker build --platform=linux/amd64 -f Dockerfile -t quarkus/firestore-quickstart-jvm .
 ```
 
 Then run the container using:
 
 ```shell script
 docker run -i --rm -p 8080:8080 quarkus/firestore-quickstart-jvm
+```
+
+Use Cloud Build to build your image, it will upload to a Google Cloud Storage bucket all the files of your application (except the ones ignored by the `.gcloudignore`file), build your Docker image and push it to Google Container Registry (GCR).
+
+```shell script
+gcloud builds submit --tag gcr.io/employeeapp-2c1fa/firestore-quickstart
+```
+
+Finally, use Cloud Run to launch your application.
+```shell script
+gcloud run deploy --image gcr.io/employeeapp-2c1fa/firestore-quickstart
 ```
